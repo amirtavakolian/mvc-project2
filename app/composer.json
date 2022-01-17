@@ -1,0 +1,16 @@
+{
+    "name": "reza/app",
+    "type": "project",
+    "authors": [
+        {
+            "name": "amir reza tavakolian",
+            "email": "rezatva@gmail.com"
+        }
+    ],
+    "require": {},
+	"autoloader":{
+		"psr-4":{
+			"app\\":"app/"
+		}
+	}
+}
