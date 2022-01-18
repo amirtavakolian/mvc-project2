@@ -2,4 +2,10 @@
 require dirname(__DIR__) . "\\bootstrap\\init.php";
 
 
-$router->start();
+echo '<pre>';
+  print_r($router->getRoutes());
+echo '</pre>';
+
+
+
+ $router->start();

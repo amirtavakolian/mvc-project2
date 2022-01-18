@@ -11,7 +11,6 @@ class router{
     const MAIN_NAMESPACE = "app\\controller\\";
 
 
-    
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -25,6 +24,8 @@ class router{
             die();
         }
 
+        die();
+
         list($controller, $action) = $this->checkTarget();   
 
         $obj = new $controller();
@@ -35,6 +36,10 @@ class router{
     private function checkTarget(){
 
         $target = $this->getTarget();
+
+        var_dump($target);
+
+        die();
 
         $this->defineNamespace();    
         
@@ -55,6 +60,15 @@ class router{
 
     public function addRoute($route, $target){
 
+
+        $route = preg_replace("/\//", "\\/", $route);
+        
+        $route = preg_replace("/\{[a-z]+\}/", "([a-z]+)", $route);
+
+
+
+        echo $route;
+
         if(!is_array($target)){
             $this->table[$route] = ["target"=>$target];
         }else{
@@ -64,7 +78,12 @@ class router{
 
 
     private function routeExist(){
-        return array_key_exists($this->request->getUri(), $this->table);
+        foreach ($this->table as $key=>$value){      
+            if(preg_match("/^". $key ."\/?$/", $this->request->getUri())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getRoutes(){
