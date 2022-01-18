@@ -5,8 +5,10 @@ namespace app\core;
 class router{
 
     private $table = [];
+    private $parameters = [];
     private $request;
     private $namespace = ""; 
+
 
     const MAIN_NAMESPACE = "app\\controller\\";
 
@@ -24,8 +26,7 @@ class router{
             die();
         }
 
-        die();
-
+        
         list($controller, $action) = $this->checkTarget();   
 
         $obj = new $controller();
@@ -33,11 +34,25 @@ class router{
     }
 
 
+
+
+    private function routeExist(){
+        foreach ($this->table as $key=>$value){      
+            if(preg_match($key, $this->request->getUri(), $matches)){
+                foreach($matches as $matchesKey=>$matchesValue){
+                    if(is_string($matchesKey)){
+                        $this->parameters[$matchesKey] = $matchesValue;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     private function checkTarget(){
 
         $target = $this->getTarget();
-
-        var_dump($target);
 
         die();
 
@@ -60,14 +75,12 @@ class router{
 
     public function addRoute($route, $target){
 
-
         $route = preg_replace("/\//", "\\/", $route);
-        
-        $route = preg_replace("/\{[a-z]+\}/", "([a-z]+)", $route);
+        $route = preg_replace("/\{([a-z]+)\}/", '(?<\1>[a-z0-9]+)', $route);
+        $route = "/^". $route ."\/?$/";
 
 
 
-        echo $route;
 
         if(!is_array($target)){
             $this->table[$route] = ["target"=>$target];
@@ -77,14 +90,7 @@ class router{
     }
 
 
-    private function routeExist(){
-        foreach ($this->table as $key=>$value){      
-            if(preg_match("/^". $key ."\/?$/", $this->request->getUri())){
-                return true;
-            }
-        }
-        return false;
-    }
+  
 
     public function getRoutes(){
         return $this->table;
