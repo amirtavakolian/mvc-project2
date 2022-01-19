@@ -10,13 +10,13 @@ class router{
     private $request;
     private $namespace = ""; 
 
-
     const MAIN_NAMESPACE = "app\\controller\\";
 
 
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $this->table = routes::getRoutes();
     }
     
     
@@ -36,7 +36,6 @@ class router{
 
 
     private function routeExist(){
-
         foreach ($this->table as $key=>$value){      
             if(preg_match($key, $this->request->getUri(), $matches)){
                 
@@ -56,12 +55,10 @@ class router{
 
     private function checkTarget(){
 
-        
         list($controller, $action)  = $this->getControllerAction();
         $namespace = $this->getNamespace();
 
         $controller = router::MAIN_NAMESPACE.$namespace.$controller;
-
 
         if(!class_exists($controller)){
             die("Controller Not Found");
@@ -75,11 +72,7 @@ class router{
     }
 
 
-
-  
-
     public function addRoute($route, $target){
-
         $route = preg_replace("/\//", "\\/", $route);
         $route = preg_replace("/\{([a-z]+)\}/", '(?<\1>[a-z0-9]+)', $route);
         $route = "/^". $route ."\/?$/";
@@ -96,12 +89,9 @@ class router{
     }
     
 
-
     private function getControllerAction(){
-
         list($controller, $action) = explode("@", $this->target['target']);       
         return [$controller, $action];
-        
     }
 
     private function getNamespace(){

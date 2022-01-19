@@ -21,10 +21,7 @@ class routes{
         $target["method"] = $method;
         routes::$routesTable[$route] = $target;
     }
-   
-    echo '<pre>';
-    print_r(routes::$routesTable);
-    echo '</pre>';
+    
 
   }
 
@@ -35,6 +32,12 @@ class routes{
     $route = "/^". $route ."\/?$/";
     return $route;
   }
+
+  public static function getRoutes(){
+    return routes::$routesTable;
+  }
+
+
 
   public static function get($route,$target){
     routes::addRoute($route, $target, "get");

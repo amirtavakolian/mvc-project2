@@ -11,10 +11,10 @@ require dirname(__DIR__) . "\\helper\\helper.php";
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
+require dirname(__DIR__) . "\\routes\\web.php";
 
 $request = new app\core\request();
 $router = new app\core\router($request);
 
 
-require dirname(__DIR__) . "\\routes\\web.php";
 

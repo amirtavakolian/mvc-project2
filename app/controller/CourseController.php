@@ -8,7 +8,7 @@ class CourseController{
 
   public function index($data)
   {
-    
+    echo "Hellooo hedait E fani";
   }
 
 }
