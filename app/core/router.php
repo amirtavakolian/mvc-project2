@@ -84,9 +84,6 @@ class router{
         $route = preg_replace("/\{([a-z]+)\}/", '(?<\1>[a-z0-9]+)', $route);
         $route = "/^". $route ."\/?$/";
 
-
-
-
         if(!is_array($target)){
             $this->table[$route] = ["target"=>$target];
         }else{
