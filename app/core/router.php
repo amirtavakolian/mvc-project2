@@ -6,6 +6,7 @@ class router{
 
     private $table = [];
     private $parameters = [];
+    private $target = [];
     private $request;
     private $namespace = ""; 
 
@@ -25,20 +26,22 @@ class router{
             view("pages.404");
             die();
         }
-
         
         list($controller, $action) = $this->checkTarget();   
 
         $obj = new $controller();
-        $obj->$action();
+        $obj->$action($this->parameters);
+        
     }
 
 
-
-
     private function routeExist(){
+
         foreach ($this->table as $key=>$value){      
             if(preg_match($key, $this->request->getUri(), $matches)){
+                
+                $this->target = $value;
+
                 foreach($matches as $matchesKey=>$matchesValue){
                     if(is_string($matchesKey)){
                         $this->parameters[$matchesKey] = $matchesValue;
@@ -50,15 +53,16 @@ class router{
         return false;
     }
 
+
     private function checkTarget(){
 
-        $target = $this->getTarget();
-
-        die();
-
-        $this->defineNamespace();    
         
-        list($controller, $action)  = $this->getControllerAction($target);
+        list($controller, $action)  = $this->getControllerAction();
+        $namespace = $this->getNamespace();
+
+        $controller = router::MAIN_NAMESPACE.$namespace.$controller;
+
+        var_dump($controller);
 
         if(!class_exists($controller)){
             die("Controller Not Found");
@@ -72,6 +76,8 @@ class router{
     }
 
 
+
+  
 
     public function addRoute($route, $target){
 
@@ -89,30 +95,23 @@ class router{
         }
     }
 
-
-  
-
     public function getRoutes(){
         return $this->table;
     }
     
-    private function getTarget(){
-        return $this->table[$this->request->getUri()]["target"];
-    }
 
 
-    private function defineNamespace(){
+    private function getControllerAction(){
 
-        if (array_key_exists("namespace",$this->table[$this->request->getUri()])){
-            $this->namespace = $this->table[$this->request->getUri()]["namespace"];
-        }
-    }
-
-
-    private function getControllerAction($target){
-
-        list($controller, $action) = explode("@", $target);       
-        $controller = router::MAIN_NAMESPACE . $this->namespace . $controller;
+        list($controller, $action) = explode("@", $this->target['target']);       
         return [$controller, $action];
+        
     }
-}
+
+    private function getNamespace(){
+        if(array_key_exists("namespace", $this->target)){
+            return $this->target['namespace'];
+        }
+        return "";
+    }
+} 
