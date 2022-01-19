@@ -5,18 +5,23 @@ class request {
 
   private $uri; 
   private $method;
-  private $userAgent;
+  private $agent;
   private $remoteAddress; 
   private $queryString;
+  private $params;
 
 
   public function __construct()
   {
-    $this->uri = explode("?", str_replace(env('REMOVE_FROM_URI'), "", $_SERVER['REQUEST_URI']))[0];
+
+    // $this->uri = explode("?", str_replace(env('REMOVE_FROM_URI'), "", $_SERVER['REQUEST_URI']))[0];
+    
+    $this->uri = str_replace(env('REMOVE_FROM_URI'), "", strtok($_SERVER['REQUEST_URI'], "?"));
     $this->method = $_SERVER['REQUEST_METHOD'];
-    $this->userAgent = $_SERVER['HTTP_USER_AGENT'];
+    $this->agent = $_SERVER['HTTP_USER_AGENT'];
     $this->remoteAddress = $_SERVER['REMOTE_ADDR'];
     $this->queryString = $_SERVER['QUERY_STRING'];
+    $this->params = $_REQUEST;
   }
 
 
@@ -29,8 +34,8 @@ class request {
     return $this->method;
   }
 
-  public function getUserAgent(){
-    return $this->userAgent;
+  public function getAgent(){
+    return $this->agent;
   }
 
   public function getRemoteAddress(){

@@ -62,7 +62,6 @@ class router{
 
         $controller = router::MAIN_NAMESPACE.$namespace.$controller;
 
-        var_dump($controller);
 
         if(!class_exists($controller)){
             die("Controller Not Found");
