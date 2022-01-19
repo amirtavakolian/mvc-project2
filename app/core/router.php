@@ -19,7 +19,7 @@ class router{
         $this->table = routes::getRoutes();
     }
     
-    
+
     public function start(){
 
         if (!$this->routeExist()){
@@ -36,9 +36,12 @@ class router{
 
 
     private function routeExist(){
-        foreach ($this->table as $key=>$value){      
+
+        foreach ($this->table as $key=>$value){    
+
             if(preg_match($key, $this->request->getUri(), $matches)){
                 
+                $this->checkCallable($value);
                 $this->target = $value;
 
                 foreach($matches as $matchesKey=>$matchesValue){
@@ -69,6 +72,15 @@ class router{
         }
 
         return [$controller, $action];
+    }
+
+   
+
+    private function checkCallable($value){
+        if(is_callable($value["target"])){            
+            $value["target"]();
+            die();
+        }
     }
 
 

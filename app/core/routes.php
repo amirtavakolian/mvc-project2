@@ -9,6 +9,10 @@ class routes{
    
   public static function addRoute($route, $target, $method){
     
+    if(!is_array($method)){
+      $method = [$method];
+    }
+
     $route = routes::routeToRegularExprestion($route);
        
 
