@@ -7,7 +7,7 @@ class routes{
   private static $routesTable = [];
 
    
-  public static function addRoute($route, $target, $method){
+  public static function add($route, $target, $method=["get"]){
     
     if(!is_array($method)){
       $method = [$method];
@@ -15,7 +15,6 @@ class routes{
 
     $route = routes::routeToRegularExprestion($route);
        
-
     if(!is_array($target)){
   
         $target = ["target"=>$target, "method"=>$method];
@@ -25,8 +24,6 @@ class routes{
         $target["method"] = $method;
         routes::$routesTable[$route] = $target;
     }
-    
-
   }
 
   private static function routeToRegularExprestion($route)
@@ -37,18 +34,18 @@ class routes{
     return $route;
   }
 
+
   public static function getRoutes(){
     return routes::$routesTable;
   }
 
 
-
   public static function get($route,$target){
-    routes::addRoute($route, $target, "get");
+    routes::add($route, $target, "get");
   }
 
   public static function post($route,$target){
-    routes::addRoute($route, $target, "post");
+    routes::add($route, $target, "post");
   }
 
  

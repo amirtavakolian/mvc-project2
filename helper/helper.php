@@ -18,3 +18,4 @@ function view($fileName, $data=[]){
     include ($file);
 
 }
+

@@ -8,6 +8,7 @@ class router{
     private $parameters = [];
     private $target = [];
     private $request;
+    private $regularRoute;
     private $namespace = ""; 
 
     const MAIN_NAMESPACE = "app\\controller\\";
@@ -27,6 +28,11 @@ class router{
             die();
         }
         
+        if (!$this->checkRequestMethod()){
+            view("pages.405");
+            die();
+        }
+
         list($controller, $action) = $this->checkTarget();   
 
         $obj = new $controller();
@@ -37,10 +43,10 @@ class router{
 
     private function routeExist(){
 
-        foreach ($this->table as $key=>$value){    
-
+        foreach ($this->table as $key=>$value){
             if(preg_match($key, $this->request->getUri(), $matches)){
                 
+                $this->regularRoute = $key;
                 $this->checkCallable($value);
                 $this->target = $value;
 
@@ -54,7 +60,16 @@ class router{
         }
         return false;
     }
+    
 
+    private function checkRequestMethod(){
+
+        if(!in_array($this->request->getMethod(), $this->table[$this->regularRoute]["method"])){
+            return false;
+        }
+        return true;
+    }
+    
 
     private function checkTarget(){
 
@@ -70,12 +85,10 @@ class router{
         if(!method_exists($controller, $action)){
             die("Action Not Found");
         }
-
         return [$controller, $action];
     }
 
    
-
     private function checkCallable($value){
         if(is_callable($value["target"])){            
             $value["target"]();
@@ -95,6 +108,7 @@ class router{
             $this->table[$route] = $target;
         }
     }
+
 
     public function getRoutes(){
         return $this->table;

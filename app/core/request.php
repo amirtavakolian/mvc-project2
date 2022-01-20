@@ -17,7 +17,7 @@ class request {
     // $this->uri = explode("?", str_replace(env('REMOVE_FROM_URI'), "", $_SERVER['REQUEST_URI']))[0];
     
     $this->uri = str_replace(env('REMOVE_FROM_URI'), "", strtok($_SERVER['REQUEST_URI'], "?"));
-    $this->method = $_SERVER['REQUEST_METHOD'];
+    $this->method = strtolower($_SERVER['REQUEST_METHOD']);
     $this->agent = $_SERVER['HTTP_USER_AGENT'];
     $this->remoteAddress = $_SERVER['REMOTE_ADDR'];
     $this->queryString = $_SERVER['QUERY_STRING'];
